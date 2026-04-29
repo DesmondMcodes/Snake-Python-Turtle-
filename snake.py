@@ -18,27 +18,50 @@ def playing_area():
     pen.end_fill()
     
 class Head(Turtle):
-  def __init__(self, screen, body):
+  def __init__(self, screen):
     super().__init__()
-    pass
+    self.shape("square")
+    self.color("black")
+    self.pu()
+    self.alive = True
+    self.direction = ""
+    screen.onkey(self.left, "Left")
+    screen.onkey(self.right, "Right")
+    screen.onkey(self.up, "Up")
+    screen.onkey(self.down, "Down")
+    self.speed(0)
 
   def up(self):
-    pass
-
+    if self.heading() != 270:
+      self.setheading(90)
+    
   def down(self):
-    pass
+    if self.heading() != 90:
+      self.setheading(-90)
 
   def left(self):
-    pass
+    if self.heading() != 0:
+      self.setheading(180)
 
   def right(self):
-    pass
+    if self.heading() != 180:
+      self.setheading(0)
 
   def move(self):
-    pass
+    self.fd(1)
+    if self.xcor() < -240:
+      self.alive = False
+    elif self.xcor() > 240:
+      self.alive = False
+    elif self.ycor() > 240:
+      self.alive = False
+    elif self.ycor() < -240:
+      self.alive
+    
     
   def die(self):
-    pass
+    self.alive = False
+    exit()
 
 
 class Segment(Turtle):
@@ -52,25 +75,32 @@ class Segment(Turtle):
 class Apple(Turtle):
   def __init__(self):
     super().__init__()
-    pass
-
+    self.speed(0)
+    self.shape("circle")
+    self.color("red")
+    self.pu()
+    self.goto(random.randint(-230,230), random.randint(-230,230))
   def relocate(self):
-    pass
+    self.goto(random.randint(-230,230), random.randint(-230,230))
+
+
+def relocate(self):
+  pass
 
 screen = Screen()
 screen.bgcolor("black")
 screen.setup(520,520)
+playing_area()
 # Key Binding. Connects key presses and mouse clicks with function calls
 screen.listen()
 
+player = Head(screen)
+apple = Apple()
+
 body = []
-
-
-screen.exitonclick()
-
-
-
-
-
+while player.alive == True:
+  player.move()
+  if player.distance(apple) < 20:
+    apple.relocate()
 
 screen.exitonclick()
