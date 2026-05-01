@@ -1,5 +1,7 @@
 from turtle import *
 import random
+import time
+
 
 def generate_color():
     return f"#{random.randint(0, 0xFFFFFF):06x}"
@@ -48,15 +50,24 @@ class Head(Turtle):
       self.setheading(0)
 
   def move(self):
-    self.fd(1)
+    time.sleep(.25)
+    self.fd(20)
     if self.xcor() < -240:
       self.alive = False
+      for i in body:
+        i.ht()
     elif self.xcor() > 240:
       self.alive = False
+      for i in body:
+        i.ht()
     elif self.ycor() > 240:
       self.alive = False
+      for i in body:
+        i.ht()
     elif self.ycor() < -240:
-      self.alive
+      self.alive = False
+      for i in body:
+        i.ht()
     
     
   def die(self):
@@ -65,12 +76,19 @@ class Head(Turtle):
 
 
 class Segment(Turtle):
-  def __init__(self, other):
+  def __init__(self, body):
     super().__init__()
-    pass
+    self.ht()
+    self.shape("square")
+    self.color(generate_color())
+    self.pu()
+    self.speed(0)
+    self.goto(body[-1].xcor(), body[-1].ycor())
+    self.st()
 
   def move(self, other):
-    pass
+    self.goto(other.xcor(), other.ycor())
+
 
 class Apple(Turtle):
   def __init__(self):
@@ -93,14 +111,29 @@ screen.setup(520,520)
 playing_area()
 # Key Binding. Connects key presses and mouse clicks with function calls
 screen.listen()
-
+body = []
 player = Head(screen)
 apple = Apple()
+body.append(player)
+a = Segment(body)
+a.ht()
+body.append(a)
+b = Segment(body)
+body.append(b)
 
-body = []
+
 while player.alive == True:
   player.move()
   if player.distance(apple) < 20:
     apple.relocate()
+    body.append(Segment(body))
+  for i in range(len(body) - 1, 0, -1):
+      body[i].move(body[i-1])
+  for i in body:
+    for i2 in body:
+      if body[i].distance(body[i2]) < 20 and i != i2:
+        for i3 in body:
+          body[i3].ht()
+        exit()
 
 screen.exitonclick()
