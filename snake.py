@@ -129,11 +129,10 @@ while player.alive == True:
     body.append(Segment(body))
   for i in range(len(body) - 1, 0, -1):
       body[i].move(body[i-1])
-  for i in body:
-    for i2 in body:
-      if body[i].distance(body[i2]) < 20 and i != i2:
-        for i3 in body:
-          body[i3].ht()
-        exit()
-
+  for i in range(3,len(body)):
+    if body[i].distance(player) < 20:
+      for j in range(len(body)):
+        body[j].ht()
+      body = []
+      exit()
 screen.exitonclick()
